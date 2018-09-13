@@ -26,6 +26,38 @@
 
     var ENCODE_SCALE = 110000;
 
+    function evolve() {
+      buckets.forEach(function(bucket) {
+        bucket.length = 0;
+      });
+      particles.forEach(function(particle) {
+        if (particle.age > MAX_PARTICLE_AGE) {
+          field.randomize(particle).age = 0;
+        }
+
+        var x = particle.x;
+        var y = particle.y;
+        var v = field(x, y); // vector at current position
+        var m = v[2];
+        if (m === null) {
+          particle.age = MAX_PARTICLE_AGE; // particle has escaped the grid, never to return...
+        } else {
+          var xt = x + v[0];
+          var yt = y + v[1];
+          if (field.isDefined(xt, yt)) {
+            // Path from (x,y) to (xt,yt) is visible, so add this particle to the appropriate draw bucket.
+            particle.xt = xt;
+            particle.yt = yt;
+            buckets[colorStyles.indexFor(m)].push(particle);
+          } else {
+            // Particle isn't visible, but it still moves through the field.
+            particle.x = xt;
+            particle.y = yt;
+          }
+        }
+        particle.age += 1;
+      });
+    }
 
     function decodeLine(line) {
       console.log(line.geometry.coordinates);
@@ -61,7 +93,7 @@
     var regions = [];
 
     Promise.all([$.getJSON('https://mgzjys.github.io/LineViz/anntown.json')])
-     .then(function([data, lastFeature]) {
+      .then(function([data, lastFeature]) {
         var feature_collections = data.features;
         var lines = feature_collections.map(function(track) {
           return {
