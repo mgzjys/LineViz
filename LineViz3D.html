@@ -58,31 +58,32 @@
         particle.age += 1;
       });
     }
+    var ENCODE_SCALE = 1e6;
 
     function decodeLine(line) {
-      console.log(line.geometry.coordinates);
-      return line.geometry.paths[0];
+      //  console.log(line.geometry.coordinates);
+      //  return line.geometry.paths[0];
 
       var result = [];
-      //var prevX = parseFloat(line['dropoff_longitude']);
-      //var prevY = parseFloat(line['dropoff_latitude']);
+      var prevX = parseFloat(line['geometry']['paths'][0][0][0]);
+      var prevY = parseFloat(line['geometry']['paths'][0][0][1]);
       //  var prevX = -74.00039850902397;
       //  var prevY = 40.74776789154442;
+      //   console.log(line['geometry']['paths'][0][0][0]);
 
-
-      //  var currtX = line['the_geom']['coordinates'][2];
-      //  var currtY = line['the_geom']['coordinates'][3];
+      var currtX = line['geometry']['paths'][0][1][0];
+      var currtY = line['geometry']['paths'][0][1][1];
 
       //λA is longtitude, ΦA is latitude
 
-      //  var linedist = Math.sqrt((prevX - currtX) * (prevX - currtX) + (prevY - currtY) * (prevY - currtY))
+      var linedist = Math.sqrt((prevX - currtX) * (prevX - currtX) + (prevY - currtY) * (prevY - currtY))
 
 
 
-      //  result.push([parseFloat(line['dropoff_longitude']), parseFloat(line['dropoff_latitude'])]);
-      //  result.push([parseFloat(line['pickup_longitude']), parseFloat(line['pickup_latitude'])]);
+      result.push([parseFloat(line['geometry']['paths'][0][0][0]), parseFloat(line['geometry']['paths'][0][0][1])]);
+      result.push([parseFloat(line['geometry']['paths'][0][1][0]), parseFloat(line['geometry']['paths'][0][1][1])]);
 
-      //console.log(result);
+    //  console.log(result);
       return result;
 
     }
@@ -167,11 +168,11 @@
 
             effect: {
               show: true,
-              constantSpeed: 9,
-              trailWidth: 3,
-              trailLength: 18,
-              trailOpacity: 0.9,
-              spotIntensity: 60
+              constantSpeed: 3,
+              trailWidth: 1.5,
+              trailLength: 1.5,
+              trailOpacity: 1,
+              spotIntensity: 10
             },
 
             blendMode: 'lighter',
@@ -179,9 +180,9 @@
             polyline: true,
 
             lineStyle: {
-              width: 0.9,
-              color: 'rgb(90, 90, 180)',
-              opacity: 0.1
+              width: 1.5,
+              color: 'rgb(180, 90, 180)',
+              opacity: 0
             },
 
             data: {
