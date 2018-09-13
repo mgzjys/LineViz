@@ -20,7 +20,7 @@
     var app = {};
     option = null;
     app.title = '北京公交路线 - 线特效';
-    $.getJSON('http://localhost/data/lines-bus.json', function(data) {
+    $.getJSON('https://mgzjys.github.io/LineViz/lines-bus.json', function(data) {
       console.log(data);
       var hStep = 300 / (data.length - 1);
       var busLines = [].concat.apply([], data.map(function(busLine, idx) {

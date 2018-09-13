@@ -92,7 +92,7 @@
     };
     var regions = [];
 
-    Promise.all([$.getJSON('http://localhost/data/anntown.json')])
+    Promise.all([$.getJSON('https://mgzjys.github.io/LineViz/anntown.json')])
       .then(function([data, lastFeature]) {
         var feature_collections = data.features;
         var lines = feature_collections.map(function(track) {
