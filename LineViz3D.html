@@ -60,9 +60,13 @@
     }
     var ENCODE_SCALE = 1e6;
 
+
+
     function decodeLine(line) {
       //  console.log(line.geometry.coordinates);
       //  return line.geometry.paths[0];
+      //
+      // var coords = [];
 
       var result = [];
       var prevX = parseFloat(line['geometry']['paths'][0][0][0]);
@@ -78,13 +82,22 @@
 
       var linedist = Math.sqrt((prevX - currtX) * (prevX - currtX) + (prevY - currtY) * (prevY - currtY))
 
+      result.push({
+        coords: line.geometry.paths[0],
+        lineStyle: {
+          color: echarts.color.modifyHSL('#5A94DF', Math.round(line['geometry']['paths'][0][1][0]))
+
+        }
+      })
 
 
-      result.push([parseFloat(line['geometry']['paths'][0][0][0]), parseFloat(line['geometry']['paths'][0][0][1])]);
-      result.push([parseFloat(line['geometry']['paths'][0][1][0]), parseFloat(line['geometry']['paths'][0][1][1])]);
 
-    //  console.log(result);
-      return result;
+      //    result.push([parseFloat(line['geometry']['paths'][0][0][0]), parseFloat(line['geometry']['paths'][0][0][1])]);
+      //    result.push([parseFloat(line['geometry']['paths'][0][1][0]), parseFloat(line['geometry']['paths'][0][1][1])]);
+
+
+      //  console.log(result);
+      //return result;
 
     }
 
@@ -94,13 +107,31 @@
     var regions = [];
 
     Promise.all([$.getJSON('https://mgzjys.github.io/LineViz/anntown.json')])
-      .then(function([data, lastFeature]) {
+      .then(function([data]) {
         var feature_collections = data.features;
-        var lines = feature_collections.map(function(track) {
-          return {
-            coords: decodeLine(track)
-          };
-        });
+        var d = new Date();
+        var m = d.getMinutes();
+        var s = d.getSeconds();
+        var annRoutes = [];
+        var i = 0;
+      //  console.log(m*10+s);
+
+        i = 300 / Math.floor((Math.random() * m * 60) + s * 3);
+      //  console.log(i);
+        for (var x in feature_collections) {
+
+          var lnglats = feature_collections[x].geometry.paths[0]
+          annRoutes.push({
+            coords: lnglats,
+          })
+        }
+
+
+        //        var lines = feature_collections.map(function(track) {
+        //          return {
+        //            coords: decodeLine(track)
+        //          };
+        //        });
 
         echarts.registerMap('buildings', geoJSON);
 
@@ -168,9 +199,9 @@
 
             effect: {
               show: true,
-              constantSpeed: 3,
-              trailWidth: 1.5,
-              trailLength: 1.5,
+              constantSpeed: 1,
+              trailWidth: 3,
+              trailLength: 1,
               trailOpacity: 1,
               spotIntensity: 10
             },
@@ -180,37 +211,18 @@
             polyline: true,
 
             lineStyle: {
-              width: 1.5,
+              width: 5,
               color: 'rgb(180, 90, 180)',
               opacity: 0
             },
 
             data: {
               count: function() {
-                return lines.length;
+                return annRoutes.length;
               },
               getItem: function(idx) {
-                return lines[idx]
+                return annRoutes[idx]
               }
-            }
-          }, {
-            type: 'map3D',
-            map: 'buildings',
-
-            coordinateSystem: 'mapbox',
-            shading: 'realistic',
-            silent: true,
-            itemStyle: {
-              areaColor: '#fff'
-            },
-
-            instancing: true,
-
-            data: regions,
-
-            realisticMaterial: {
-              metalness: 1,
-              roughness: 0.2,
             }
           }]
         });
