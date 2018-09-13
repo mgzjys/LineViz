@@ -7,14 +7,20 @@
 
 <body style="height: 100%; margin: 0">
   <div id="container" style="height: 100%"></div>
+  <script src='https://mgzjys.github.io/Bicycle_Accidents_Visualization/js/echarts.js'></script>
+  <script src='https://mgzjys.github.io/Bicycle_Accidents_Visualization/js/echarts-gl.js'></script>
   <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/jquery.js"></script>
-  <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/echarts-all-3.js"></script>
+
   <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/dataTool.min.js"></script>
+  <script src='https://mgzjys.github.io/Bicycle_Accidents_Visualization/js/mapbox-gl.js'></script>
+  <link href='https://mgzjys.github.io/Bicycle_Accidents_Visualization/js/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://unpkg.com/shapefile@0.6"></script>
   <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/china.js"></script>
   <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/world.js"></script>
-  <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/api.js"></script>
-  <script type="text/javascript" src="https://mgzjys.github.io/LineViz/libs/bmap.min.js"></script>
+  <script src='https://mgzjys.github.io/Bicycle_Accidents_Visualization/js/dat.gui.js'></script>
   <script type="text/javascript">
+    mapboxgl.accessToken = window.location.search.slice(1);
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWd6anlzIiwiYSI6ImNqOHg4dTYyZzF3c2wzMW1iNXc2cXNteTAifQ.kaPEfBr4GPlJfIeLdAU9Vg';
     var dom = document.getElementById("container");
     var myChart = echarts.init(dom);
     var app = {};
@@ -45,119 +51,58 @@
         };
       }));
       myChart.setOption(option = {
-        bmap: {
-          center: [94.03, 19.76],
-          zoom: 10,
-          roam: true,
-          mapStyle: {
-            'styleJson': [{
-              'featureType': 'water',
-              'elementType': 'all',
-              'stylers': {
-                'color': '#031628'
-              }
-            }, {
-              'featureType': 'land',
-              'elementType': 'geometry',
-              'stylers': {
-                'color': '#000102'
-              }
-            }, {
-              'featureType': 'highway',
-              'elementType': 'all',
-              'stylers': {
-                'visibility': 'off'
-              }
-            }, {
-              'featureType': 'arterial',
-              'elementType': 'geometry.fill',
-              'stylers': {
-                'color': '#000000'
-              }
-            }, {
-              'featureType': 'arterial',
-              'elementType': 'geometry.stroke',
-              'stylers': {
-                'color': '#0b3d51'
-              }
-            }, {
-              'featureType': 'local',
-              'elementType': 'geometry',
-              'stylers': {
-                'color': '#000000'
-              }
-            }, {
-              'featureType': 'railway',
-              'elementType': 'geometry.fill',
-              'stylers': {
-                'color': '#000000'
-              }
-            }, {
-              'featureType': 'railway',
-              'elementType': 'geometry.stroke',
-              'stylers': {
-                'color': '#08304b'
-              }
-            }, {
-              'featureType': 'subway',
-              'elementType': 'geometry',
-              'stylers': {
-                'lightness': -70
-              }
-            }, {
-              'featureType': 'building',
-              'elementType': 'geometry.fill',
-              'stylers': {
-                'color': '#000000'
-              }
-            }, {
-              'featureType': 'all',
-              'elementType': 'labels.text.fill',
-              'stylers': {
-                'color': '#857f7f'
-              }
-            }, {
-              'featureType': 'all',
-              'elementType': 'labels.text.stroke',
-              'stylers': {
-                'color': '#000000'
-              }
-            }, {
-              'featureType': 'building',
-              'elementType': 'geometry',
-              'stylers': {
-                'color': '#022338'
-              }
-            }, {
-              'featureType': 'green',
-              'elementType': 'geometry',
-              'stylers': {
-                'color': '#062032'
-              }
-            }, {
-              'featureType': 'boundary',
-              'elementType': 'all',
-              'stylers': {
-                'color': '#465b6c'
-              }
-            }, {
-              'featureType': 'manmade',
-              'elementType': 'all',
-              'stylers': {
-                'color': '#022338'
-              }
-            }, {
-              'featureType': 'label',
-              'elementType': 'all',
-              'stylers': {
-                'visibility': 'off'
-              }
-            }]
+        mapbox: {
+          center: [-74.019710, 40.612397],
+          zoom: 14,
+          pitch: 50,
+          bearing: -10,
+          altitudeScale: 2,
+          style: 'mapbox://styles/mapbox/dark-v9',
+          visualMap: {
+            show: false,
+            min: 0.4,
+            max: 10,
+            inRange: {
+              color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+            }
+          },
+          postEffect: {
+            enable: true,
+            screenSpaceAmbientOcclusion: {
+              enable: true,
+              intensity: 1.2,
+              radius: 6,
+              quality: 'high'
+            },
+            screenSpaceReflection: {
+              enable: true
+            },
+            depthOfField: {
+              enable: false,
+              focalDistance: 80,
+              blurRadius: 5
+            }
+          },
+          light: {
+            main: {
+              intensity: 1,
+              shadow: true,
+              shadowQuality: 'high'
+            },
+            ambient: {
+              intensity: 0.
+            },
+            ambientCubemap: {
+              texture: 'https://mgzjys.github.io/Bicycle_Accidents_Visualization/data/pisa.hdr',
+              exposure: 1,
+              diffuseIntensity: 0.5,
+              specularIntensity: 2
+            }
           }
         },
         series: [{
           type: 'lines',
-          coordinateSystem: 'bmap',
+          coordinateSystem: 'mapbox',
           polyline: true,
           data: busLines,
           silent: true,
@@ -173,7 +118,7 @@
           progressive: 200
         }, {
           type: 'lines',
-          coordinateSystem: 'bmap',
+          coordinateSystem: 'mapbox',
           polyline: true,
           data: busLines,
           lineStyle: {
